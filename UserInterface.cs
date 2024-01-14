@@ -16,6 +16,7 @@ internal class UserInterface
                                                                 MainMenuSelections.ViewContacts,
                                                                 MainMenuSelections.UpdateContact,
                                                                 MainMenuSelections.DeleteContact,
+                                                                MainMenuSelections.SendEmail,
                                                                 MainMenuSelections.Quit
                                                    ));
             switch (selection)
@@ -32,6 +33,9 @@ internal class UserInterface
                 case MainMenuSelections.UpdateContact:
                     UpdateContact();
                     break;
+                case MainMenuSelections.SendEmail:
+                    SendEmail();
+                    break;
                 case MainMenuSelections.Quit:
                     Environment.Exit(0);
                     break;
@@ -39,6 +43,13 @@ internal class UserInterface
         }
     }
 
+    private void SendEmail()
+    {
+        var contact = SelectContact("send e-mail");
+        EmailSender sender = new EmailSender();
+        sender.SetUpSender();
+        sender.SendEmail(contact);
+    }
     private void AddContact()
     {
         string name = AnsiConsole.Ask<string>("Enter name: ");

@@ -8,6 +8,7 @@ internal class Enums
         ViewContacts,
         UpdateContact,
         DeleteContact,
+        SendEmail,
         Quit
     }
 }
