@@ -5,17 +5,20 @@ namespace PhoneBook.Doc415;
 
 internal class DataAccess
 {
-    public void AddContact(string _name, string _email, string _phone, string _title)
+    private readonly PhoneBookContext db = new();
+    public void AddContact(string _name, string _email, string _phone, string _title,string _category)
     {
-        Contact newContact= new Contact();
-        newContact.Name= _name;
-        newContact.Email= _email;
-        newContact.Title= _title;
-        newContact.PhoneNumber= _phone;
+        Contact newContact = new Contact()
+        {
+            Name = _name,
+            Email = _email,
+            Title = _title,
+            PhoneNumber = _phone,
+            Category = _category
+        };
 
         try
         {
-            var db = new PhoneBookContext();
             db.Contacts.Add(newContact);
             db.SaveChanges();
         }
@@ -27,25 +30,33 @@ internal class DataAccess
 
     public List<Contact> GetContacts()
     {
-        using var db = new PhoneBookContext();
         return db.Contacts.OrderBy(x=>x.Name).ToList();
+    }
+
+    public List<Contact> GetContactsByCategory(string _category)
+    {
+        return db.Contacts.Where(x => x.Category==_category).ToList();
+    }
+
+    public List<string> GetCategories()
+    {
+        return db.Contacts.Select(x=> x.Category).Distinct().ToList();
     }
 
     public void DeleteContact(Contact todelete)
     {
-        using var db = new PhoneBookContext();
         db.Contacts.Remove(todelete);
         db.SaveChanges();
     }
 
-    public void UpdateContact(string _name, string _title, string _phone,string _email,Contact toUpdate)
+    public void UpdateContact(string _name, string _title, string _phone,string _email,string _category,Contact toUpdate)
     {
         toUpdate.Name= _name;
         toUpdate.Email= _email;
         toUpdate.Title= _title;
         toUpdate.PhoneNumber= _phone;
+        toUpdate.Category= _category;
 
-        var db = new PhoneBookContext();
         db.Update(toUpdate);
         db.SaveChanges();
     }    
